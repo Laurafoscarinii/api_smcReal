@@ -1,46 +1,73 @@
+// usuarioController.js
 const usuarioModel = require('../model/usuarioModel.js');
-const enderecoModel = require('../model/enderecoModel.js'); // Importe o enderecoModel
 const { setToken } = require('../util/token.js');
 
 
-
 exports.criarUsuario = async (req, res) => {
-  const { nome, cpf, dataNascimento, endereco, email, senha } = req.body;
+  const {
+    nome,
+    cpf,
+    dataNascimento,
+    email,
+    senha,
+    cep,
+    estado,
+    cidade,
+    bairro,
+    complemento,
+    rua,
+    numero,
+    numeroTelefone
+  } = req.body;
 
-  // Checar se todos os dados necessários estão presentes
-  if (!nome || !cpf || !dataNascimento || !endereco || !email || !senha) {
+  // Verifique se os campos obrigatórios estão presentes
+  if (!nome || !cpf || !dataNascimento || !email || !senha || !cep || !estado || !cidade || !bairro || !complemento || !rua || !numero || !numeroTelefone) {
     return res.status(400).send('Dados incompletos');
   }
 
-  // Verifique se o usuário já existe pelo CPF
+  // Verifica se o usuário já existe
   const usuarioPeloCPF = await usuarioModel.usuarioPeloCPF(cpf);
-
   if (usuarioPeloCPF) {
     return res.status(400).send('Usuário já cadastrado!');
   }
 
-  // Crie o novo usuário
-  const criaNovoUsuario = await usuarioModel.criaNovoUsuario(nome, cpf, dataNascimento, endereco, email, senha);
+  // Criação do usuário com os dados recebidos
+  const criaNovoUsuario = await usuarioModel.criaNovoUsuario(
+    nome,
+    cpf,
+    dataNascimento,
+    email,
+    senha,
+    cep,
+    estado,
+    cidade,
+    bairro,
+    complemento,
+    rua,
+    numero,
+    numeroTelefone
+  );
 
-  // Gere um novo token para o usuário criado usando o ID
-  const token = await setToken(criaNovoUsuario);
+  // Gere um novo token para o usuário criado
+  const token = await setToken({ id: criaNovoUsuario.matricula });
+
   return res.status(200).json({ message: 'Usuário cadastrado!', token });
 };
 
 
 
 
+// Função para editar um usuário
 exports.editarUsuario = async (req, res) => {
-  console.log('editarUsuario foi chamada'); // Adicione esta linha para depurar
   const { matricula } = req.params;
-  const { nome, cpf, dataNascimento, endereco, email, senha } = req.body;
+  const { nome, cpf, dataNascimento, email, senha } = req.body; // Remova 'endereco' daqui
 
-  if (!nome || !cpf || !dataNascimento || !endereco || !email || !senha) {
+  if (!nome || !cpf || !dataNascimento || !email || !senha) { // Remova 'endereco' da verificação
     return res.status(400).send('Dados incompletos');
   }
-  
+
   try {
-    await usuarioModel.atualizaUsuario(matricula, nome, cpf, dataNascimento, endereco, email, senha);
+    await usuarioModel.atualizaUsuario(matricula, nome, cpf, dataNascimento, email, senha); // Remova 'endereco' daqui
     res.status(200).json({ message: 'Usuário atualizado com sucesso' });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao atualizar usuário.', error: error.message });
@@ -49,28 +76,20 @@ exports.editarUsuario = async (req, res) => {
 
 
 
-
-
-
-
 exports.excluirUsuario = async (req, res) => {
-  const { id } = req.params; // Espera que o ID do usuário seja passado na URL
+  const { matricula } = req.params; // Obtém a matrícula da URL
+  console.log('Matrícula recebida para exclusão:', matricula); // Log para verificar a matrícula
 
-  if (!id) {
-    return res.status(400).send('ID do usuário é necessário');
+  try {
+    const result = await usuarioModel.excluirUsuario(matricula); // Chama a função do modelo para excluir o usuário
+    console.log('Resultado da exclusão:', result); // Log para verificar o resultado da operação
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Usuário não encontrado!' });
+    }
+    return res.status(200).json({ message: 'Usuário excluído com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao excluir usuário:', error);
+    return res.status(500).json({ message: 'Erro ao excluir usuário.', error: error.message });
   }
-
-  const usuarioExistente = await usuarioModel.usuarioPorId(id);
-
-  if (!usuarioExistente) {
-    return res.status(404).send('Usuário não encontrado');
-  }
-
-  await usuarioModel.excluirUsuario(id); // Você precisa implementar essa função no modelo.
-  return res.status(200).json({ message: 'Usuário excluído com sucesso' });
-};
-
-exports.listarUsuarios = async (req, res) => {
-  const usuarios = await usuarioModel.listarUsuarios(); // Você precisa implementar essa função no modelo.
-  return res.status(200).json(usuarios);
 };

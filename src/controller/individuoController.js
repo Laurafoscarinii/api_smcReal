@@ -1,61 +1,85 @@
 const individuoModel = require('../model/individuoModel');
+const db = require('../model/database'); // Altere para o caminho correto de configuração
 
-// No controlador (individuoController.js)
+// Criar um novo indivíduo
 exports.criarIndividuo = async (req, res) => {
-    const { cpf, nome, sobrenome, sexo, dataNascimento, rg, nis, etnia, email, endereco_idendereco } = req.body;
+    try {
+        const {
+          cpf, nome, sobrenome, sexo, dataNascimento, rg, nis,
+          etnia, email, cep, estado, cidade, bairro,
+          complemento, rua, numero, numeroTelefone
+        } = req.body;
+    
+        // Verifica se todos os campos obrigatórios estão presentes
+        if (!cpf || !nome || !sobrenome || !sexo || !dataNascimento || !rg || !nis ||
+            !etnia || !email || !cep || !estado || !cidade || !bairro ||
+            !complemento || !rua || !numero || !numeroTelefone) {
+          return res.status(400).json({ message: "Por favor, preencha todos os campos obrigatórios." });
+        }
+    
+        // Query SQL para inserir um novo indivíduo
+        const sql = `
+          INSERT INTO individuo (cpf, nome, sobrenome, sexo, dataNascimento, rg, nis,
+          etnia, email, cep, estado, cidade, bairro, complemento, rua, numero, numeroTelefone)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+    
+        // Executa a query passando os valores
+        await db.query(sql, [
+          cpf, nome, sobrenome, sexo, dataNascimento, rg, nis,
+          etnia, email, cep, estado, cidade, bairro, complemento, rua, numero, numeroTelefone
+        ]);
+    
+        res.status(201).json({ message: "Indivíduo cadastrado com sucesso." });
+      } catch (error) {
+        res.status(500).json({
+          message: "Erro ao cadastrar indivíduo.",
+          error: error.message,
+        });
+      }
+};
 
-    // Verificação de campos obrigatórios
-    if (!cpf || !nome || !sobrenome || !sexo || !dataNascimento || !rg || !nis || !etnia || !email || !endereco_idendereco) {
-        return res.status(400).json({ message: 'Dados incompletos' });
-    }
+// Atualizar um indivíduo
+exports.atualizaIndividuo = async (req, res) => {
+    const { cpf } = req.params;
+    const { 
+        nome, sobrenome, sexo, 
+        dataNascimento, rg, nis, etnia, 
+        email, cep, estado, cidade, 
+        bairro, complemento, rua, numero, 
+        numeroTelefone 
+    } = req.body;
 
     try {
-        const id = await individuoModel.criaNovoIndividuo(cpf, nome, sobrenome, sexo, dataNascimento, rg, nis, etnia, email, endereco_idendereco);
-        return res.status(201).json({ message: 'Indivíduo cadastrado com sucesso', id });
+        await individuoModel.atualizaIndividuo(cpf, nome, sobrenome, sexo, dataNascimento, rg, nis, etnia, email, cep, estado, cidade, bairro, complemento, rua, numero, numeroTelefone);
+        res.status(200).json({ message: 'Indivíduo atualizado com sucesso' });
     } catch (error) {
-        return res.status(500).json({ message: 'Erro ao cadastrar indivíduo.', error: error.message });
+        res.status(500).json({ message: 'Erro ao atualizar indivíduo.', error: error.message });
     }
 };
 
+// Excluir um indivíduo
+exports.excluirIndividuo = async (req, res) => {
+    const { cpf } = req.params;
 
-
-exports.atualizaIndividuo = async (req, res) => {
-    const { cpf } = req.params; // Mude de req.params para obter o cpf
-    const { nome, sobrenome, sexo, dataNascimento, rg, nis, etnia, email, endereco_idendereco } = req.body;
-  
-    try {
-      await individuoModel.atualizaIndividuo(cpf, nome, sobrenome, sexo, dataNascimento, rg, nis, etnia, email, endereco_idendereco);
-      res.status(200).json({ message: 'Indivíduo atualizado com sucesso' });
-    } catch (error) {
-      res.status(500).json({ message: 'Erro ao atualizar indivíduo.', error: error.message });
+    if (!cpf) {
+        return res.status(400).send('CPF do indivíduo é necessário');
     }
-  };
-  
 
+    // Verifique se o indivíduo existe pelo CPF
+    const individuoExistente = await individuoModel.individuoPorCPF(cpf);
 
-
-
-
-  exports.excluirIndividuo = async (req, res) => {
-    const { id } = req.params; // Espera que o ID do indivíduo seja passado na URL
-  
-    if (!id) {
-      return res.status(400).send('ID do indivíduo é necessário');
-    }
-  
-    const individuoExistente = await individuoModel.individuoPorId(id);
-  
     if (!individuoExistente) {
-      return res.status(404).send('Indivíduo não encontrado');
+        return res.status(404).send('Indivíduo não encontrado');
     }
-  
-    await individuoModel.excluirIndividuo(id); // Você precisa implementar essa função no modelo.
-    return res.status(200).json({ message: 'Indivíduo excluído com sucesso' });
-  };
 
-  
-  exports.listarIndividuos = async (req, res) => {
-    const individuos = await individuoModel.listarIndividuos(); // Você precisa implementar essa função no modelo.
+    // Exclua o indivíduo pelo CPF
+    await individuoModel.excluirIndividuo(cpf);
+    return res.status(200).json({ message: 'Indivíduo excluído com sucesso' });
+};
+
+// Listar todos os indivíduos
+exports.listarIndividuos = async (req, res) => {
+    const individuos = await individuoModel.listarIndividuos();
     return res.status(200).json(individuos);
-  };
-  
+};

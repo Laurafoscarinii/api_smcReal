@@ -8,24 +8,27 @@ const telefoneController = require("../controller/telefoneController");
 
 const router = express.Router();
 
+// Rota de Home
 router.get("/", (req, res) => {
   res.status(200).send("<h1>Sistema de Monitoramento de Calamidade</h1>");
 });
 
+// Rota Sobre
 router.get("/sobre", (req, res) => {
   res.status(200).send({
-    nome: "smc api",
+    nome: "SMC API",
     versao: "0.1.0",
     autor: "Laura e Natália",
   });
 });
 
+// --------------------------
 // Rotas de Usuário
-router.post("/usuarios", async (req, res) => {
+router.post('/usuarios', async (req, res) => {
   try {
     await usuarioController.criarUsuario(req, res);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao criar Usuário.', error: error.message });
+    res.status(500).json({ message: 'Erro ao cadastrar usuário.', error: error.message });
   }
 });
 
@@ -37,7 +40,7 @@ router.put("/usuarios/:matricula", async (req, res) => {
   }
 });
 
-router.delete("/usuarios/:id", async (req, res) => {
+router.delete("/usuarios/:matricula", async (req, res) => {
   try {
     await usuarioController.excluirUsuario(req, res);
   } catch (error) {
@@ -53,6 +56,7 @@ router.get("/usuarios", async (req, res) => {
   }
 });
 
+// --------------------------
 // Rotas de Endereço
 router.post("/enderecos", async (req, res) => {
   try {
@@ -62,8 +66,6 @@ router.post("/enderecos", async (req, res) => {
   }
 });
 
-
-// router.js
 router.put("/enderecos/:id", async (req, res) => {
   try {
     await enderecoController.editarEndereco(req, res);
@@ -72,10 +74,7 @@ router.put("/enderecos/:id", async (req, res) => {
   }
 });
 
-
-
-
-router.delete("/enderecos/:id", async (req, res) => {
+router.delete("/enderecos/:idendereco", async (req, res) => {
   try {
     await enderecoController.excluirEndereco(req, res);
   } catch (error) {
@@ -83,7 +82,9 @@ router.delete("/enderecos/:id", async (req, res) => {
   }
 });
 
+// --------------------------
 // Rotas de Indivíduo
+// Exemplo de como deve estar sua rota
 router.post("/individuos", async (req, res) => {
   try {
     await individuoController.criarIndividuo(req, res);
@@ -94,36 +95,62 @@ router.post("/individuos", async (req, res) => {
 
 router.put("/individuos/:cpf", async (req, res) => {
   try {
-    await individuoController.atualizaIndividuo(req, res);
+      await individuoController.atualizaIndividuo(req, res);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao atualizar indivíduo.', error: error.message });
+      res.status(500).json({ message: 'Erro ao atualizar indivíduo.', error: error.message });
   }
 });
 
-
-router.delete("/individuos/:id", async (req, res) => {
+router.delete("/individuos/:cpf", async (req, res) => {
   try {
-    await individuoController.excluirIndividuo(req, res);
+      await individuoController.excluirIndividuo(req, res);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao excluir indivíduo.', error: error.message });
+      res.status(500).json({ message: 'Erro ao excluir indivíduo.', error: error.message });
   }
 });
 
 router.get("/individuos", async (req, res) => {
   try {
-    await individuoController.listarIndividuos(req, res);
+      await individuoController.listarIndividuos(req, res);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
+      res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
   }
 });
 
-// Rota de Telefone
+// --------------------------
+// Rotas de Telefone
 router.post("/telefones", async (req, res) => {
   try {
-    await telefoneController.cadastrarTelefone(req, res); // Certifique-se de que está chamando a função correta
+    await telefoneController.cadastrarTelefone(req, res);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao cadastrar telefone.', error: error.message });
   }
 });
+
+router.put("/telefones/:cpf", async (req, res) => {
+  try {
+    await telefoneController.atualizarTelefone(req, res);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao atualizar telefone.', error: error.message });
+  }
+});
+
+router.delete("/telefones/:cpf", async (req, res) => {
+  try {
+    await telefoneController.excluirTelefone(req, res);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao excluir telefone.', error: error.message });
+  }
+});
+
+
+
+
+// Definindo a rota para '/usuarios'
+router.get('/usuarios', (req, res) => {
+  res.json({ message: 'Rota de usuários funcionando' });
+});
+
+
 
 module.exports = router;

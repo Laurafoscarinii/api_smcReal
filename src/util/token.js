@@ -1,33 +1,19 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const TOKEN_KEY = 'SMC_TOKEN_KEY'
+const TOKEN_KEY = process.env.TOKEN_KEY || 'SMC_TOKEN_KEY'; // Use uma chave secreta do ambiente ou uma chave padrão
 
-const checkToken = async (token, id) => {
-  try {
-    const decoded = jwt.verify(token, TOKEN_KEY);
-    
-    const idNum = Number(id);
-    if (decoded.id !== idNum) {
-      return { auth: false, message: 'Token inválido, ID do usuário não correspondente.' };
-    }
-    
-    return { auth: true, message: 'Token válido.' };
-  } catch (erro) {
-    return { auth: false, message: 'Token inválido.' };
-  }
+const setToken = (usuario) => {
+    return new Promise((resolve, reject) => {
+        jwt.sign({ id: usuario.id }, TOKEN_KEY, { expiresIn: '30d' }, (err, token) => {
+            if (err) {
+                return reject(err);
+            }
+            console.log("Token gerado:", token); // Verifique no console se o token está correto
+            resolve(token);
+        });
+    });
 };
 
-const setToken = async (id) => {
-  if (id <= 0) {
-    return { auth: false, message: 'ID inválido.' };
-  }
 
-  const token = jwt.sign({ id }, TOKEN_KEY, { expiresIn: '30d' });
-  return { auth: true, token };
-};
-
-module.exports = {
-  checkToken,
-  setToken,
-};
+module.exports = { setToken };

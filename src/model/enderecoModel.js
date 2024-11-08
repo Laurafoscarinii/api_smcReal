@@ -31,14 +31,12 @@ exports.atualizaEndereco = async (idendereco, cep, estado, cidade, bairro, compl
 
 
 
-// enderecoModel.js
-exports.enderecoPorId = async (id) => {
-  const endereco = await query('SELECT * FROM endereco WHERE id = ?', [id]);
+exports.enderecoPorId = async (idendereco) => {
+  const endereco = await query('SELECT * FROM endereco WHERE idendereco = ?', [idendereco]);
   return endereco.length > 0 ? endereco[0] : null;
 };
 
 
-
-exports.excluirEndereco = async (id) => {
-  await query('DELETE FROM endereco WHERE id = ?', [id]);
+exports.excluirEndereco = async (idendereco) => {
+  await query('DELETE FROM endereco WHERE idendereco = ?', [idendereco]);
 };
