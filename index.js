@@ -1,22 +1,21 @@
-const express = require('express');
+const express = require('express');  // Corrigido para 'express'
 const cors = require('cors');
-//const authMiddleware = require('./src/middleware/authMiddleware');
 
 // Resto do seu código...
 
-const app = express();
+const app = express();  // Use 'app' em vez de 'aplicativo'
 
 // Configurações de middleware
 app.use(cors());
 app.use(express.json());
-//app.use(authMiddleware);
+// app.use(authMiddleware); // Descomente se você estiver usando middleware de autenticação
 
 const root = require('./src/routers/root');
-app.use('/', root);
+app.use('/', root); // Certifique-se de que o arquivo 'root' exista e tenha a rota correta
 
-// Configurar o servidor para aceitar conexões de qualquer IP
-app.listen(5000, '0.0.0.0', () => {  // Alteração: '0.0.0.0' para aceitar qualquer IP da rede local
+// Configura o servidor para aceitar conexões de qualquer IP
+app.listen(5000, '0.0.0.0', () => {
   console.log('Servidor rodando na porta 5000');
 });
 
-module.exports = app;
+module.exports = app; // Corrigido para 'module.exports'
