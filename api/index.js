@@ -1,5 +1,6 @@
 const express = require('express');  // Corrigido para 'express'
 const cors = require('cors');
+app.use(cors()); // Habilita o CORS para aceitar requisições de outros domínios
 
 // Resto do seu código...
 
