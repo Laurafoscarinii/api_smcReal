@@ -50,7 +50,7 @@ exports.atualizaUsuario = async (matricula, nome, cpf, dataNascimento, email, se
 
 // Função para listar todos os usuários
 exports.listarUsuarios = async () => {
-  const sql = `SELECT * FROM usuarios`;
+  const sql = `SELECT * FROM usuario`;
   const result = await query(sql);
   return result;
 };

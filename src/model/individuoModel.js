@@ -35,7 +35,7 @@ const individuoModel = {
 
 
 exports.listarIndividuos = async () => {
-    const sql = `SELECT * FROM individuos`; // Substitua 'individuo' pelo nome da tabela correspondente no seu banco de dados
+    const sql = `SELECT * FROM individuo`; // Substitua 'individuo' pelo nome da tabela correspondente no seu banco de dados
     const result = await query(sql); // Executa a consulta no banco de dados
     return result; // Retorna o resultado da consulta
   };
