@@ -20,3 +20,4 @@ app.listen(5000, '0.0.0.0', () => {
 
 
 module.exports = app; // Exportação para Vercel
+

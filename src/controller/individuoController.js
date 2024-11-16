@@ -80,11 +80,15 @@ exports.excluirIndividuo = async (req, res) => {
 
 // Listar todos os indivíduos
 
+
+// Função para listar todos os indivíduos
 exports.listarIndividuos = async (req, res) => {
   try {
-    const individuos = await individuoModel.listarIndividuos(); // Chama a função do modelo para listar indivíduos
+    // Chama a função para listar indivíduos no modelo
+    const individuos = await individuoModel.listarIndividuos(); 
     res.json(individuos); // Retorna os indivíduos encontrados
   } catch (error) {
+    console.error('Erro ao listar indivíduos:', error);
     res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
   }
 };

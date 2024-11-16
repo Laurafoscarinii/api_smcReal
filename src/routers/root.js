@@ -1,8 +1,9 @@
-const express = require("express");
+const express = require ("express");
 const usuarioController = require("../controller/usuarioController");
 const enderecoController = require("../controller/enderecoController");
 const individuoController = require("../controller/individuoController");
 const telefoneController = require("../controller/telefoneController");
+
 
 
 
@@ -97,14 +98,6 @@ router.post("/individuos", async (req, res) => {
 });
 
 
-router.get("/individuos", async (req, res) => {
-  try {
-    await usuarioController.listarUsuarios(req, res);
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
-  }
-});
-
 
 router.delete("/individuos/:cpf", async (req, res) => {
   try {
@@ -115,9 +108,10 @@ router.delete("/individuos/:cpf", async (req, res) => {
 });
 
 
+// Rota para listar indivíduos
 router.get("/individuos", async (req, res) => {
   try {
-    await individuoController.listarIndividuos(req, res); // Chama a função de listar indivíduos corretamente
+    await individuoController.listarIndividuos(req, res); // Chama a função do controller
   } catch (error) {
     res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
   }

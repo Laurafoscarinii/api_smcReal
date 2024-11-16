@@ -34,10 +34,15 @@ const individuoModel = {
 };
 
 
+// Função para listar todos os indivíduos
 exports.listarIndividuos = async () => {
-    const sql = `SELECT * FROM individuo`; // Substitua 'individuo' pelo nome da tabela correspondente no seu banco de dados
-    const result = await query(sql); // Executa a consulta no banco de dados
-    return result; // Retorna o resultado da consulta
+    try {
+      const queryString = 'SELECT * FROM individuo';  // Query para pegar todos os indivíduos
+      const individuos = await db.query(queryString); // Chama a função query do arquivo de banco de dados
+      return individuos; // Retorna os dados dos indivíduos
+    } catch (error) {
+      throw new Error('Erro ao listar indivíduos: ' + error.message);
+    }
   };
 
 
