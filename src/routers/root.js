@@ -56,6 +56,7 @@ router.get("/usuarios", async (req, res) => {
   }
 });
 
+
 // --------------------------
 // Rotas de Endereço
 router.post("/enderecos", async (req, res) => {
@@ -101,7 +102,6 @@ router.get("/individuos", async (req, res) => {
     res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
   }
 });
-
 
 
 router.delete("/individuos/:cpf", async (req, res) => {
