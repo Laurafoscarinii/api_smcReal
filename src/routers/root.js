@@ -47,14 +47,16 @@ router.delete("/usuarios/:matricula", async (req, res) => {
     res.status(500).json({ message: 'Erro ao excluir Usuário.', error: error.message });
   }
 });
-
+ 
+// Corrigir a chamada para a função listarUsuarios na rota
 router.get("/usuarios", async (req, res) => {
   try {
-    await usuarioController.listarUsuarios(req, res);
+    await usuarioController.listarUsuarios(req, res); // Certifique-se de que essa função está sendo chamada corretamente
   } catch (error) {
     res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
   }
 });
+
 
 
 // --------------------------
@@ -112,11 +114,12 @@ router.delete("/individuos/:cpf", async (req, res) => {
   }
 });
 
+
 router.get("/individuos", async (req, res) => {
   try {
-      await individuoController.listarIndividuos(req, res);
+    await individuoController.listarIndividuos(req, res); // Chama a função de listar indivíduos corretamente
   } catch (error) {
-      res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
+    res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
   }
 });
 

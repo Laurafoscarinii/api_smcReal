@@ -80,16 +80,11 @@ exports.excluirIndividuo = async (req, res) => {
 
 // Listar todos os indivíduos
 
-const listarIndividuos = async (req, res) => {
+exports.listarIndividuos = async (req, res) => {
   try {
-      // Adicione a lógica para buscar indivíduos do banco de dados.
-      // Exemplo com Sequelize:
-      const individuos = await Indivíduo.findAll(); // Ajuste conforme sua ORM ou query direta
-      res.json(individuos);
+    const individuos = await individuoModel.listarIndividuos(); // Chama a função do modelo para listar indivíduos
+    res.json(individuos); // Retorna os indivíduos encontrados
   } catch (error) {
-      res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
+    res.status(500).json({ message: 'Erro ao listar indivíduos.', error: error.message });
   }
 };
-
-
-module.exports = { listarIndividuos };

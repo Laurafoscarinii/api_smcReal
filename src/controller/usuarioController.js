@@ -95,12 +95,13 @@ exports.excluirUsuario = async (req, res) => {
 };
 
 
-const listarUsuarios = async (req, res) => {
+// Defina a função listarUsuarios corretamente
+exports.listarUsuarios = async (req, res) => {
   try {
-      // Exemplo de lógica para listar usuários do banco de dados
-      const usuarios = await Usuario.findAll(); // Ou use sua lógica específica
-      res.json(usuarios);
+    // Chame a função do modelo que lista os usuários
+    const usuarios = await usuarioModel.listarUsuarios();
+    res.json(usuarios); // Retorne os usuários encontrados
   } catch (error) {
-      res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
+    res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
   }
 };
