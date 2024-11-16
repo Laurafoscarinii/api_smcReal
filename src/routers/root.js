@@ -93,13 +93,16 @@ router.post("/individuos", async (req, res) => {
   }
 });
 
-router.put("/individuos/:cpf", async (req, res) => {
+
+router.get("/individuos", async (req, res) => {
   try {
-      await individuoController.atualizaIndividuo(req, res);
+    await usuarioController.listarUsuarios(req, res);
   } catch (error) {
-      res.status(500).json({ message: 'Erro ao atualizar indivíduo.', error: error.message });
+    res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
   }
 });
+
+
 
 router.delete("/individuos/:cpf", async (req, res) => {
   try {

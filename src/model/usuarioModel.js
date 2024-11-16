@@ -49,4 +49,3 @@ exports.atualizaUsuario = async (matricula, nome, cpf, dataNascimento, email, se
 
 
 
-
