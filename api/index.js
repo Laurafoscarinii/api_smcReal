@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 // app.use(authMiddleware); // Descomente se você estiver usando middleware de autenticação
 
-const root = require('./src/routers/root');
+const root = require('../src/routers/root');
 app.use('/', root); // Certifique-se de que o arquivo 'root' exista e tenha a rota correta
 
 // Configura o servidor para aceitar conexões de qualquer IP
@@ -18,4 +18,5 @@ app.listen(5000, '0.0.0.0', () => {
   console.log('Servidor rodando na porta 5000');
 });
 
-module.exports = app; // Corrigido para 'module.exports'
+
+module.exports = app; // Exportação para Vercel
