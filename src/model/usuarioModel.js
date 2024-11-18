@@ -57,3 +57,11 @@ exports.listarUsuarios = async () => {
 
 
 
+
+exports.buscarUsuarioPorEmailECpf = async (email, cpf) => {
+  const usuario = await query(
+    `SELECT * FROM usuario WHERE email = ? AND cpf = ?`, [email, cpf]
+  );
+
+  return usuario.length > 0 ? usuario[0] : null; // Retorna o primeiro usuário encontrado
+};

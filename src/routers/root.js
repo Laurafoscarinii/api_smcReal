@@ -153,4 +153,15 @@ router.get('/usuarios', (req, res) => {
 
 
 
+
+// Rota para buscar usuário pelo email e CPF
+router.post("/usuarios/login", async (req, res) => {
+  try {
+    await usuarioController.buscarUsuarioPorEmailECpf(req, res); // Consulta com email e CPF
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
+  }
+});
+
+
 module.exports = router;

@@ -105,3 +105,28 @@ exports.listarUsuarios = async (req, res) => {
     res.status(500).json({ message: 'Erro ao listar Usuários.', error: error.message });
   }
 };
+
+
+
+
+
+// Função para buscar usuário pelo email e cpf
+exports.buscarUsuarioPorEmailECpf = async (req, res) => {
+  const { email, cpf } = req.body;
+
+  if (!email || !cpf) {
+    return res.status(400).send('Email e CPF são obrigatórios');
+  }
+
+  try {
+    const usuario = await usuarioModel.buscarUsuarioPorEmailECpf(email, cpf);
+
+    if (!usuario) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    res.status(200).json(usuario);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
+  }
+};
