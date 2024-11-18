@@ -57,11 +57,18 @@ exports.listarUsuarios = async () => {
 
 
 
-
+// usuarioModel.js
 exports.buscarUsuarioPorEmailECpf = async (email, cpf) => {
-  const usuario = await query(
-    `SELECT * FROM usuario WHERE email = ? AND cpf = ?`, [email, cpf]
-  );
+  try {
+    // Realizando a consulta no banco de dados
+    const usuario = await query(
+      `SELECT * FROM usuario WHERE email = ? AND cpf = ?`, [email, cpf]
+    );
 
-  return usuario.length > 0 ? usuario[0] : null; // Retorna o primeiro usuário encontrado
+    // Retorna o primeiro usuário encontrado, se existir
+    return usuario.length > 0 ? usuario[0] : null;
+  } catch (error) {
+    console.error('Erro ao consultar usuário:', error);
+    throw new Error('Erro ao buscar usuário no banco de dados');
+  }
 };

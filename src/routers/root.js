@@ -157,7 +157,9 @@ router.get('/usuarios', (req, res) => {
 // Rota para buscar usuário pelo email e CPF
 router.post("/usuarios/login", async (req, res) => {
   try {
-    await usuarioController.buscarUsuarioPorEmailECpf(req, res); // Consulta com email e CPF
+    // Verifica se a requisição está recebendo corretamente os dados
+    console.log(req.body); // Depuração
+    await usuarioController.buscarUsuarioPorEmailECpf(req, res); // Chama a função do controlador
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
   }

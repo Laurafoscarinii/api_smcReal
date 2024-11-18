@@ -110,7 +110,7 @@ exports.listarUsuarios = async (req, res) => {
 
 
 
-// Função para buscar usuário pelo email e cpf
+// usuarioController.js
 exports.buscarUsuarioPorEmailECpf = async (req, res) => {
   const { email, cpf } = req.body;
 
@@ -125,8 +125,11 @@ exports.buscarUsuarioPorEmailECpf = async (req, res) => {
       return res.status(404).send('Usuário não encontrado');
     }
 
-    res.status(200).json(usuario);
+    // Retorna os dados do usuário com sucesso
+    return res.status(200).json({ success: true, user: usuario });
   } catch (error) {
+    console.error('Erro ao buscar usuário:', error); // Log para depuração
     res.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
   }
 };
+
